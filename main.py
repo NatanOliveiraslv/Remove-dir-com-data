@@ -1,4 +1,3 @@
-
 importar  SO
 importar  Shutil
 importar  pêndulo
