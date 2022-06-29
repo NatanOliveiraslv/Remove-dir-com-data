@@ -1,43 +1,43 @@
-importar  SO
-importar  Shutil
-importar  pêndulo
-de  datetime  importação  datetime
-do  PyQt5  import  uic , QtWidgets
-de  PyQt5 . QtWidgets  importa  QMessageBox
+import os
+import shutil
+import pendulum
+from datetime import datetime
+from PyQt5 import uic,QtWidgets
+from PyQt5.QtWidgets import QMessageBox
 
-def  funcao_principal ():
+def funcao_principal():
 
-    caminho_procura  =  removedor . caminho . texto ()
-    dados  =  removedor . data_inicial . texto ()
-    data1  =  removedor . data_final . texto ()
-    data2  =  datahora . strptime ( data , '%d/%m/%y' ). data ()
-    data3  =  datahora . strptime ( data1 , '%d/%m/%y' ). data ()
-    periodo  =  pêndulo . período ( dados2 , dados3 )
+    caminho_procura = remover.caminho.text()
+    data = remover.data_inicial.text()
+    data1 = remover.data_final.text()
+    data2 = datetime.strptime(data, '%d/%m/%y').date()
+    data3 = datetime.strptime(data1, '%d/%m/%y').date()
+    periodo = pendulum.period(data2, data3)
 
-    for  raiz , diretórios , arquivos  em  os . andar ( caminho_procura ):
-                para  diretório  em  diretórios :
-                    por  dia  em  periodo . intervalo ( 'dias' ):
-                        dia  =  str ( dia )
-                        se  dia  no  diretório :
-                            tente :
+    for raiz, diretorios, arquivos in os.walk(caminho_procura):
+                for diretorio in diretorios:
+                    for day in periodo.range('days'):
+                        dia = str(day)
+                        if dia in diretorio:
+                            try:
 
-                                caminho_completo  =  os . caminho . join ( raiz , diretório )
-                                Shutil . rmtree ( caminho_completo  +  ' \\ ' )
-                                print ( caminho_completo )
+                                caminho_completo = os.path.join(raiz, diretorio)
+                                shutil.rmtree(caminho_completo + '\\')
+                                print(caminho_completo)
 
-                            exceto  ValueError  como  e :
-                                QMessageBox . sobre ( removedor , 'Alerta' , 'Sem permissions.' )
-                            exceto  PermissionError  as  e : #Mostra qualquer erro que der
-                                QMessageBox . sobre ( removedor , 'Alerta' , 'Sem permissions.' )
-                            exceto  FileNotFoundError  como  e :
-                                QMessageBox . sobre ( removedor , 'Alerta' , 'Arquivo (s) não encontrado (s).' )
-                            exceto  Exceção  como  e :
-                                QMessageBox . sobre ( removedor , 'Alerta' , 'Erro desconhecido.' )
+                            except ValueError as e:
+                                QMessageBox.about(remover, 'Alerta', 'Sem permissões.')
+                            except PermissionError as e: #Mostra qualquer erro que der
+                                QMessageBox.about(remover, 'Alerta', 'Sem permissões.')
+                            except FileNotFoundError as e:
+                                QMessageBox.about(remover, 'Alerta', 'Arquivo (s) não encontrado (s).')
+                            except Exception as e:
+                                QMessageBox.about(remover, 'Alerta', 'Erro desconhecido.')
 
-    QMessageBox . sobre ( removedor , 'Alerta' , 'Ação realizada com sucesso.' )
+    QMessageBox.about(remover, 'Alerta', 'Ação realizada com êxito.')
 
-app = QtWidgets . QAplicativo ([])
-removedor = uic . loadUi ( 'Remover_data.ui' )
-removedor . botão de pressão . clicou . conectar ( funcao_principal )
-removedor . mostrar ()
-aplicativo . executivo ()
+app=QtWidgets.QApplication([])
+remover=uic.loadUi('Remover_data.ui')
+remover.pushButton.clicked.connect(funcao_principal)
+remover.show()
+app.exec()
